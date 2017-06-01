@@ -7,8 +7,12 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
+	io.emit('newuser', 'Someone has connected');
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
+  });
+  socket.on('disconnect', function(msg){
+    io.emit('disconnect', 'Someone has disconnected');
   });
 });
 
