@@ -16,7 +16,7 @@ Installation (instructions from Socket.IO):
   }
 3. Run "npm install --save express@4.15.2" from command line in the directory where the package.json is.
 4. Run "npm install --save --save socket.io" from command line in the directory where the package.json is.
-5. Download files from master repository.
+5. Download files from master repository into wanted directory.
 
 Usage:
 1. From command line and in the directory where the repository is stored, run "node index.js"
