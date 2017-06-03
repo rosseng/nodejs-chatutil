@@ -11,6 +11,8 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      #chatContainer {  scroll: auto }
+	  #footer { height: 40pt; }
 	  .connection {color:green; font-style:italic;}
 	  .disconnection {color:red; font-style:italic;}
 	  .userPad {padding-right: 5pt;}
@@ -28,13 +30,17 @@
 	  <form id = "chatLogin">
 		<fieldset>
 		  <label for="name">Name</label>
-		  <input type="text" name="name" id="name" value="rosseng" class="text ui-widget-content ui-corner-all">
+		  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
 		  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
 		</fieldset>
 	  </form>
 	</div>
-    <ul id="messages"></ul>
+    <div id="chatContainer">
+        <ul id="messages"></ul>
+		<div id="footer">&nbsp;</div>
+		<div id="revealer">&nbsp;</div>
+    </div>
     <form id="chat" action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
@@ -58,6 +64,7 @@
 			li.append($('<b class="userPad">').text(o.un));
 			li.append($('<span>').text(o.m));
 		  $('#messages').append(li);
+		  $("#revealer").scrollintoview();
 		});
 		socket.on('newuser', function(msg){
 			$('#messages').append($('<li class="connection">').text(msg));

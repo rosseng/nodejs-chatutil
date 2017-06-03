@@ -6,6 +6,10 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/jquery.scrollintoview.js', function(req, res){
+  res.sendFile(__dirname + '/jquery.scrollintoview.js');
+});
+
 io.on('connection', function(socket){
 	io.emit('newuser', 'Someone has connected');
   socket.on('chat message', function(msg){
