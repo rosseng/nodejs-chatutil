@@ -16,6 +16,7 @@
 	  .connection {color:green; font-style:italic;}
 	  .disconnection {color:red; font-style:italic;}
 	  .userPad {padding-right: 5pt;}
+	  #msgColor {width: 30pt; }
     </style>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -28,12 +29,25 @@
 	  <p class="validateTips">All form fields are required.</p>
 	 
 	  <form id = "chatLogin">
-		<fieldset>
+		
 		  <label for="name">Name</label>
 		  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+		  <p>
+		  
+		  <label for="msgColor">Message Color</label>
+		  <select name="msgColor" id="msgColor">
+			<option value="black" selected style="background-color: black"></option>
+			<option value="tomato" style="background-color: tomato; color: blue;" ></option>
+			<option value="blue" style="background-color: blue"></option>
+			<option value="darkgreen" style="background-color: darkgreen"></option>
+			<option value="deeppink" style="background-color: deeppink"></option>
+			<option value="orange" style="background-color: orange"></option>
+			<option value="tan" style="background-color: tan"></option>
+			<option value="violet" style="background-color: violet"></option>
+		  </select>
 		  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-		</fieldset>
+		
 	  </form>
 	</div>
     <div id="chatContainer">
@@ -45,16 +59,17 @@
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
 	<script>
-		var userName = "", dialog;
+		var userName = "", dialog, msgColor = "black";
 				function chatSignIn(){
 			userName = $( "#name" ).val().trim();
 			if (userName == ""){
 				alert("Please enter a valid name (at least one non-space character)!");
 				return false;
 			}
+			msgColor = $( "#msgColor" ).val();
 		var socket = io();
 		$('form').submit(function(){
-		  socket.emit('chat message', JSON.stringify({un: userName, m: $('#m').val()}));
+		  socket.emit('chat message', JSON.stringify({un: userName, m: $('#m').val(), c: msgColor}));
 		  $('#m').val('');
 		  return false;
 		});
@@ -63,6 +78,7 @@
 			var li = $('<li>');
 			li.append($('<b class="userPad">').text(o.un));
 			li.append($('<span>').text(o.m));
+			li.css("color", o.c);
 		  $('#messages').append(li);
 		  $("#revealer").scrollintoview();
 		});
@@ -78,6 +94,9 @@
 
 	  $(function () {
 		var form;
+		$("#msgColor").change(function(){
+			$(this).css("background-color", $(this).val());
+		});
 		dialog = $( "#dialog-form" ).dialog({
       autoOpen: true,
       height: 400,
