@@ -1,21 +1,92 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO Chat: Login</title>
+    <title>Socket.IO Chat</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-	  h1 {font: Helvetica; position:fixed; left: 20%}
-      form { background: #000; padding: 3px; position: fixed; bottom: 80%; left: 30%; width: 35%; }
-      form input { border: 0; padding: 10px; width: 74%; margin-right: 0.5%;}
-      form button { width: 25%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #chat { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #chat input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      #chat button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+	  .connection {color:green; font-style:italic;}
+	  .disconnection {color:red; font-style:italic;}
+	  .userPad {padding-right: 5pt;}
     </style>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
-  <h1>Welcome to rosseng's Socket.IO chat utility!</h1>
   <body>
-    <ul id="username"></ul>
-    <form action="">
-      <input id="u" autocomplete="off" /><button>Login</button>
+	<div id="dialog-form" title="Create new user">
+	  <p class="validateTips">All form fields are required.</p>
+	 
+	  <form id = "chatLogin">
+		<fieldset>
+		  <label for="name">Name</label>
+		  <input type="text" name="name" id="name" value="rosseng" class="text ui-widget-content ui-corner-all">
+		  <!-- Allow form submission with keyboard without duplicating the dialog button -->
+		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+		</fieldset>
+	  </form>
+	</div>
+    <ul id="messages"></ul>
+    <form id="chat" action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
     </form>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var userName = "", dialog;
+				function chatSignIn(){
+			userName = $( "#name" ).val().trim();
+			if (userName == ""){
+				alert("Please enter a valid name (at least one non-space character)!");
+				return false;
+			}
+		var socket = io();
+		$('form').submit(function(){
+		  socket.emit('chat message', JSON.stringify({un: userName, m: $('#m').val()}));
+		  $('#m').val('');
+		  return false;
+		});
+		socket.on('chat message', function(msg){
+			var o = JSON.parse(msg);
+			var li = $('<li>');
+			li.append($('<b class="userPad">').text(o.un));
+			li.append($('<span>').text(o.m));
+		  $('#messages').append(li);
+		});
+		socket.on('newuser', function(msg){
+			$('#messages').append($('<li class="connection">').text(msg));
+		});
+		socket.on('disconnect', function(msg){
+			$('#messages').append($('<li class="disconnection">').text(msg));
+		});
+		dialog.dialog( "close" );
+		return true;
+		}
+
+	  $(function () {
+		var form;
+		dialog = $( "#dialog-form" ).dialog({
+      autoOpen: true,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Sign into the chat": chatSignIn,
+        Cancel: function() {
+          dialog.dialog("close");
+        }
+      },
+      close: function() {
+        $("#chatLogin")[0].reset();
+      }
+    });
+	  });
+	</script>
   </body>
 </html>
