@@ -12,7 +12,8 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: white; }
       #chatContainer {  scroll: auto }
-	  #footer { height: 40pt; }
+	  #footer { height: 40pt;}
+	  #usersOn {position: fixed; bottom: 30pt; font: 24px Helvetica, Arial; background-color:#A0EEFF; width:100%;}
 	  .connection {color:green; font-style:italic;}
 	  .disconnection {color:red; font-style:italic;}
 	  .userPad {padding-right: 5pt;}
@@ -52,6 +53,7 @@
 	</div>
     <div id="chatContainer">
         <ul id="messages"></ul>
+		<div id="usersOn">Users online:</div>
 		<div id="footer">&nbsp;</div>
 		<div id="revealer">&nbsp;</div>
     </div>
@@ -63,8 +65,7 @@
 				function chatSignIn(){
 			userName = $( "#name" ).val().trim();
 			if (userName == ""){
-				alert("Please enter a valid name (at least one non-space character)!");
-				return false;
+				userName = "Anonymous";
 			}
 			msgColor = $( "#msgColor" ).val();
 		var socket = io();
@@ -84,9 +85,11 @@
 		});
 		socket.on('newuser', function(msg){
 			$('#messages').append($('<li class="connection">').text(msg).fadeIn());
+			$("#revealer").scrollintoview();
 		});
 		socket.on('disconnect', function(msg){
 			$('#messages').append($('<li class="disconnection">').text(msg).fadeIn());
+			$("#revealer").scrollintoview();
 		});
 		dialog.dialog( "close" );
 		return true;
