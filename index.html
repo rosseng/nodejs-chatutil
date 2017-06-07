@@ -75,18 +75,18 @@
 		});
 		socket.on('chat message', function(msg){
 			var o = JSON.parse(msg);
-			var li = $('<li>');
-			li.append($('<b class="userPad">').text(o.un));
-			li.append($('<span>').text(o.m));
+			var li = $('<li>').fadeIn();
+			li.append($('<b class="userPad">').text(o.un).fadeIn());
+			li.append($('<span>').text(o.m).fadeIn());
 			li.css("color", o.c);
 		  $('#messages').append(li);
 		  $("#revealer").scrollintoview();
 		});
 		socket.on('newuser', function(msg){
-			$('#messages').append($('<li class="connection">').text(msg));
+			$('#messages').append($('<li class="connection">').text(msg).fadeIn());
 		});
 		socket.on('disconnect', function(msg){
-			$('#messages').append($('<li class="disconnection">').text(msg));
+			$('#messages').append($('<li class="disconnection">').text(msg).fadeIn());
 		});
 		dialog.dialog( "close" );
 		return true;
