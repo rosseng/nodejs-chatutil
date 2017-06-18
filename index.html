@@ -83,6 +83,7 @@
 		  $('#messages').append(li);
 		  $("#revealer").scrollintoview();
 		});
+		socket.emit('chat message', JSON.stringify({un: userName, m: 'has connected', c: msgColor}));
 		socket.on('newuser', function(msg){
 			$('#messages').append($('<li class="connection">').text(msg).fadeIn());
 			$("#revealer").scrollintoview();
