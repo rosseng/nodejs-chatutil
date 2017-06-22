@@ -53,7 +53,9 @@
 	</div>
     <div id="chatContainer">
         <ul id="messages"></ul>
-		<div id="usersOn">Users online:</div>
+		<div style="position: fixed;">Users online:
+			<p id="users"></p>
+		</div>
 		<div id="footer">&nbsp;</div>
 		<div id="revealer">&nbsp;</div>
     </div>
@@ -83,7 +85,14 @@
 		  $('#messages').append(li);
 		  $("#revealer").scrollintoview();
 		});
+		socket.emit('online users', JSON.stringify({un: userName}));
 		socket.emit('chat message', JSON.stringify({un: userName, m: 'has connected', c: msgColor}));
+		socket.on('online users', function(users){
+			var userArr = new Array();
+			userArr = users;
+			$('#users').empty();
+			$('#users').append($('<p class="users">').text(userArr));
+		});
 		socket.on('newuser', function(msg){
 			$('#messages').append($('<li class="connection">').text(msg).fadeIn());
 			$("#revealer").scrollintoview();
