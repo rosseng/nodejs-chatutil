@@ -30,6 +30,10 @@ io.on('connection', function(socket){
 	});
 	socket.on('disconnect', function(msg){
 		var userIndex = sockets.indexOf(this);
+		if (typeof(users[userIndex]) == 'undefined'){
+			io.emit('disconnect', 'Somebody has disconnected');
+			return;
+		}
 		io.emit('disconnect', users[userIndex] + ' has disconnected');
 		console.log(users[userIndex] + ' disconnected'.red);
 		users.splice(userIndex, 1);
