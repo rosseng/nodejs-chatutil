@@ -2,9 +2,14 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var colors = require('colors');
-var users = new Array();
 var sockets = new Array();
-
+function allUsers(){
+	var users = '';
+	sockets.forEach(function(el){
+		users += ', ' + el.un;
+	});	
+	return users.substring(2);
+}
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -14,13 +19,13 @@ app.get('/jquery.scrollintoview.js', function(req, res){
 });
 
 io.on('connection', function(socket){
-//	socket.id = Math.floor(Math.random() * 1000);
+	socket.un = "[Somebody]";
 	sockets.push(socket);
 	socket.on('online users', function(msg) {
 		var userParse = JSON.parse(msg);
-		users.push(userParse.un);
-		console.log('Users online: '.green + users);
-		io.emit('online users', users.join(', '));
+		this.un = userParse.un;
+		console.log('Users online: '.green + allUsers());
+		io.emit('online users', allUsers());
 	});
 	socket.on('chat message', function(msg){
 		var json = JSON.parse(msg);
@@ -29,16 +34,13 @@ io.on('connection', function(socket){
 		console.log(sockets.indexOf(this));
 	});
 	socket.on('disconnect', function(msg){
+		io.emit('disconnect', this.un + ' has disconnected');
+		console.log(this.un + ' disconnected'.red);
 		var userIndex = sockets.indexOf(this);
-		if (typeof(users[userIndex]) == 'undefined'){
-			io.emit('disconnect', 'Somebody has disconnected');
-			return;
+		if (typeof userIndex != 'undefined'){
+			sockets.splice(userIndex, 1);
 		}
-		io.emit('disconnect', users[userIndex] + ' has disconnected');
-		console.log(users[userIndex] + ' disconnected'.red);
-		users.splice(userIndex, 1);
-		sockets.splice(userIndex, 1);
-		io.emit('online users', users);		
+		io.emit('online users', allUsers());		
 	});
 });
 
