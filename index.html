@@ -53,8 +53,8 @@
 	</div>
     <div id="chatContainer">
         <ul id="messages"></ul>
-		<div style="position: fixed;">Users online:
-			<p id="users"></p>
+		<div style="position: fixed;">Users online: 
+			<span id="users"></span>
 		</div>
 		<div id="footer">&nbsp;</div>
 		<div id="revealer">&nbsp;</div>
@@ -91,7 +91,7 @@
 			var userArr = new Array();
 			userArr = users;
 			$('#users').empty();
-			$('#users').append($('<p class="users">').text(userArr));
+			$('#users').text(userArr);
 		});
 		socket.on('newuser', function(msg){
 			$('#messages').append($('<li class="connection">').text(msg).fadeIn());
