@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var colors = require('colors');
 var users = new Array();
+var sockets = new Array();
 
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
@@ -13,21 +14,27 @@ app.get('/jquery.scrollintoview.js', function(req, res){
 });
 
 io.on('connection', function(socket){
-	socket.id = Math.floor(Math.random() * 1000);
+//	socket.id = Math.floor(Math.random() * 1000);
+	sockets.push(socket);
 	socket.on('online users', function(msg) {
 		var userParse = JSON.parse(msg);
-		users += userParse.un + ', ';
+		users.push(userParse.un);
 		console.log('Users online: '.green + users);
-		io.emit('online users', users);
+		io.emit('online users', users.join(', '));
 	});
 	socket.on('chat message', function(msg){
 		var json = JSON.parse(msg);
 		io.emit('chat message', msg);
 		console.log('Username: '.green + json.un + ' |  Message: '.green + json.m);
+		console.log(sockets.indexOf(this));
 	});
 	socket.on('disconnect', function(msg){
-		io.emit('disconnect', 'Someone has disconnected');
-		console.log('User disconnected'.red);
+		var userIndex = sockets.indexOf(this);
+		io.emit('disconnect', users[userIndex] + ' has disconnected');
+		console.log(users[userIndex] + ' disconnected'.red);
+		users.splice(userIndex, 1);
+		sockets.splice(userIndex, 1);
+		io.emit('online users', users);		
 	});
 });
 
