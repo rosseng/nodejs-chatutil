@@ -1,66 +1,64 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Socket.IO Chat</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; background: #A0EEFF;}
-      #chat { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      #chat input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      #chat button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: white; }
-      #chatContainer {  scroll: auto }
-	  #footer { height: 40pt;}
-	  #usersOn {position: fixed; bottom: 30pt; font: 24px Helvetica, Arial; background-color:#A0EEFF; width:100%;}
-	  .connection {color:green; font-style:italic;}
-	  .disconnection {color:red; font-style:italic;}
-	  .userPad {padding-right: 5pt;}
-	  #msgColor {width: 30pt; }
-    </style>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="/jquery.scrollintoview.js"></script>
-  </head>
-  <body>
-	<div id="dialog-form" title="Create new user">
-	  <p class="validateTips">All form fields are required.</p>
-	 
-	  <form id = "chatLogin">
-		
-		  <label for="name">Name</label>
-		  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
-		  <p>
-		  
-		  <label for="msgColor">Message Color</label>
-		  <select name="msgColor" id="msgColor" style="background-color: black">
-			<option value="black" selected style="background-color: black"></option>
-			<option value="tomato" style="background-color: tomato; color: blue;" ></option>
-			<option value="blue" style="background-color: blue"></option>
-			<option value="darkgreen" style="background-color: darkgreen"></option>
-			<option value="deeppink" style="background-color: deeppink"></option>
-			<option value="orange" style="background-color: orange"></option>
-			<option value="tan" style="background-color: tan"></option>
-			<option value="violet" style="background-color: violet"></option>
-		  </select>
+	<head>
+		<title>Socket.IO Chat</title>
+			<style>
+				* { margin: 0; padding: 0; box-sizing: border-box; }
+				body { font: 13px Helvetica, Arial; background: #A0EEFF;}
+				#chat { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+				#chat input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+				#chat button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+				#messages { list-style-type: none; margin: 0; padding: 0; }
+				#messages li { padding: 5px 10px; }
+				#messages li:nth-child(odd) { background: white; }
+				#chatContainer {  scroll: auto }
+				#footer { height: 38pt;}
+				#usersOn {position: fixed; bottom: 30pt; font: 24px Helvetica, Arial; background-color:#A0EEFF; width:100%;}
+				.connection {color:green; font-style:italic;}
+				.disconnection {color:red; font-style:italic;}
+				.userPad {padding-right: 5pt;}
+				#msgColor {width: 30pt; }
+				#users {font-size: 15pt;}
+				#liveUsers {position: fixed;bottom:30pt;font-size:20pt;width:100%;background-color:#dadada;border:thin solid black;}
+			</style>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/jquery.scrollintoview.js"></script>
+	</head>
+	<body>
+		<div id="dialog-form" title="Create new user">
+			<p class="validateTips">All form fields are required.</p>	 
+			<form id = "chatLogin">
+				<label for="name">Name</label>
+				<input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+				<p>
+					<label for="msgColor">Message Color</label>
+					<select name="msgColor" id="msgColor" style="background-color: black">
+						<option value="black" selected style="background-color: black"></option>
+						<option value="tomato" style="background-color: tomato; color: blue;" ></option>
+						<option value="blue" style="background-color: blue"></option>
+						<option value="darkgreen" style="background-color: darkgreen"></option>
+						<option value="deeppink" style="background-color: deeppink"></option>
+						<option value="orange" style="background-color: orange"></option>
+						<option value="tan" style="background-color: tan"></option>
+						<option value="violet" style="background-color: violet"></option>
+					</select>
 		  <!-- Allow form submission with keyboard without duplicating the dialog button -->
-		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-		
-	  </form>
-	</div>
+				<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+			</form>
+		</div>
     <div id="chatContainer">
         <ul id="messages"></ul>
-		<div style="position: fixed;">Users online: 
+		<div id="liveUsers">Users online: 
 			<span id="users"></span>
 		</div>
 		<div id="footer">&nbsp;</div>
 		<div id="revealer">&nbsp;</div>
     </div>
     <form id="chat" action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+		<input id="m" autocomplete="off" /><button>Send</button>
     </form>
 	<script>
 		var userName = "", dialog, msgColor = "black";
@@ -82,8 +80,8 @@
 			li.append($('<b class="userPad">').text(o.un).fadeIn());
 			li.append($('<span>').text(o.m).fadeIn());
 			li.css("color", o.c);
-		  $('#messages').append(li);
-		  $("#revealer").scrollintoview();
+			$('#messages').append(li);
+			$("#revealer").scrollintoview();
 		});
 		socket.emit('online users', JSON.stringify({un: userName}));
 		socket.emit('chat message', JSON.stringify({un: userName, m: 'has connected', c: msgColor}));
