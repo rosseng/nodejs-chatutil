@@ -2,7 +2,12 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var colors = require('colors');
+var multer = require('multer');
+var upload = multer({dest: 'uploads/'});
+var fs = require('fs');
+
 var sockets = new Array();
+
 function allUsers(){
 	var users = '';
 	sockets.forEach(function(el){
@@ -32,6 +37,11 @@ io.on('connection', function(socket){
 		io.emit('chat message', msg);
 		console.log('Username: '.green + json.un + ' |  Message: '.green + json.m);
 		console.log(sockets.indexOf(this));
+	});
+	socket.on('image message', function(data){
+		if(data.img){
+			multer.single*(
+		}
 	});
 	socket.on('disconnect', function(msg){
 		io.emit('disconnect', this.un + ' has disconnected');
