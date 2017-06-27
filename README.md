@@ -9,9 +9,7 @@ Installation (instructions from Socket.IO):
 1. Run "npm install express" from command line in the directory where the package.json is.
 2. Run "npm install socket.io" from command line in the directory where the package.json is.
 3. Run "npm install colors" from command line in the directory where the package.json is.
-4. Run "npm install fs" from command line in the directory where the package.json is.
-5. Run "npm install multer" from command line in the directory where the package.json is.
-6. Download files from master repository into wanted directory.
+4. Download files from master repository into wanted directory.
 
 Usage:
 1. From command line and in the directory where the repository is stored, run "node chatservice.js"
