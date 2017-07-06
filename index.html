@@ -58,6 +58,7 @@
     </div>
     <form id="chat" action="">
 		<input id="m" autocomplete="off" /><button>Send</button>
+		<input id="i" type="file" name="i"/>
     </form>
 	<script>
 		var userName = "", dialog, msgColor = "black";
@@ -82,6 +83,23 @@
 			$('#messages').append(li);
 			$("#revealer").scrollintoview();
 		});
+		$('#i').on('change', function(e){
+		var file = e.originalEvent.target.files[0],
+			reader = new FileReader();
+			reader.onload = function(evt){
+				socket.emit('image message', JSON.stringify({un: userName, i: evt.target.result, c: msgColor}));
+			};
+			reader.readAsDataURL(file);  
+		});
+		socket.on('image message', function(msg){
+			var o = JSON.parse(msg);
+			var li = $('<li>').fadeIn();
+			li.append($('<b class="userPad">').text(o.un).fadeIn());
+			li.append($('<img src="' + o.i + '"/>').fadeIn());
+			li.css("color", o.c);
+			$('#messages').append(li);
+			$("#revealer").scrollintoview();
+		});
 		socket.emit('online users', JSON.stringify({un: userName}));
 		socket.emit('chat message', JSON.stringify({un: userName, m: 'has connected', c: msgColor}));
 		socket.on('online users', function(users){
@@ -102,27 +120,27 @@
 		return true;
 		}
 
-	  $(function () {
+	$(function () {
 		var form;
 		$("#msgColor").change(function(){
 			$(this).css("background-color", $(this).val());
 		});
 		dialog = $( "#dialog-form" ).dialog({
-      autoOpen: true,
-      height: 400,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Sign into the chat": chatSignIn,
-        Cancel: function() {
-          dialog.dialog("close");
-        }
-      },
-      close: function() {
+		autoOpen: true,
+		height: 400,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Sign into the chat": chatSignIn,
+			Cancel: function() {
+			dialog.dialog("close");
+			}
+		},
+		close: function() {
         $("#chatLogin")[0].reset();
-      }
-    });
-	  });
+		}
+		});
+	});
 	</script>
-  </body>
+	</body>
 </html>
