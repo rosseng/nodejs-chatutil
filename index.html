@@ -12,14 +12,15 @@
 				#messages li { padding: 5px 10px; }
 				#messages li:nth-child(odd) { background: white; }
 				#chatContainer {  scroll: auto }
-				#footer { height: 38pt;}
+				#footer { height: 73pt;}
 				#usersOn {position: fixed; bottom: 30pt; font: 24px Helvetica, Arial; background-color:#A0EEFF; width:100%;}
 				.connection {color:green; font-style:italic;}
 				.disconnection {color:red; font-style:italic;}
 				.userPad {padding-right: 5pt;}
+				.submit input.file {}
 				#msgColor {width: 30pt; }
 				#users {font-size: 15pt;}
-				#liveUsers {position: fixed;bottom:30pt;font-size:20pt;width:100%;background-color:#dadada;border:thin solid black;}
+				#liveUsers {position: fixed;bottom:60pt;font-size:20pt;width:100%;background-color:#dadada;border:thin solid black;}
 			</style>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -56,9 +57,9 @@
 		<div id="footer">&nbsp;</div>
 		<div id="revealer">&nbsp;</div>
     </div>
-    <form id="chat" action="">
+    <form class="submit" id="chat" action="">
 		<input id="m" autocomplete="off" /><button>Send</button>
-		<input id="i" type="file" name="i"/>
+		<input class="file" id="i" type="file" name="i"/>
     </form>
 	<script>
 		var userName = "", dialog, msgColor = "black";
